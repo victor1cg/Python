@@ -1,0 +1,46 @@
+#Aula 2  - Analise de dados em Python
+# Voce trabalha em uma empresa de Telecom e tem clientes em diferentes serviços. Analisando o historico dos clientes
+# percebeu que a empresa esta com Churn de mais de 26% dos clientes.
+# Link original https://www.kaggle.com/radmirzosimov/telecom-users-dataset
+
+# PASSO 1: OBTER A BASE DE DADOS
+import pandas as pd
+
+tabela_clientes = pd.read_csv(r'C:\Users\victor.c.goncalves\Downloads\telecom_users') #sempre que tiver / é bom colocar o r
+                                                                #dataframe as df quando importa uma tabela no py é chamado de df.
+
+
+# PASSO 2: VISUALIZAR OS DADOS PARA ENTENDER 
+display(tabela_clientes)
+display(tabela_clientes.columns)                                #mostrar as colunas
+
+# PASSO 3: TRATAMENTO DOS DADOS
+tabela_clientes = tabela_clientes.drop('Unnamed: 0', axis=1)    #dropar a coluna Unnamed: 0 coluna inteira
+tabela_clientes['NovaColuna'] = 1                               #criar no coluna toda preenchida em 1
+print(tabela_clientes.info())                                   #SEMPRE rodar isso para verificar tipo de dados e valores NaN
+
+tabela_clientes['TotalGasto'] = pd.to_numeric(tabela_clientes['TotalGasto'], errors='coerce') #se der erro preenche com valor vazio
+tabela_clientes = tabela_clientes.dropna (how ='all', axis =1)  # drop colunas com TODOS os valores vazios, se for algum how='any'
+tabela_clientes = tabela_clientes.dropna (how ='any', axis =0)  #drop linha com algum valor vazio, todas as colunas com a mesma qte de linhas
+
+
+# PASSO 4: OLHAR A DISTRIBUIÇÃO DO CHURN
+display(tabela_clientes['Churn'].value_counts())
+display(tabela_clientes['Churn'].value_counts(normalize=True).map('{:.1%}'.format))  #verificar os valores em % / .map server para formatar com 1 casa decimal
+
+
+# PASSO 5: ANALISE DAS CAUSAS DOS CANCELAMENTOS
+import plotly.express as px                                     #parte de grafico interativo
+grafico = px.histogram(tabela_clientes,x='Churn', color="Churn")
+grafico.show
+grafico = px.histogram(tabela_clientes,x='ServicoInternet', color="Churn") #cria um grafico com x em serciço e dividido por churn
+
+# IMPORTANTE  - Criar graficos com todas as colunas
+for coluna in tabela_clientes                                   #por padrão do for ele percorre as colunas. Ou seja a variavel colunas sera as colunas
+                                                                #caso queira percorrer as linhas for coluna in tabela_cliente.index
+    grafico = px.histogram(tabela_clientes,x=coluna, color="Churn") # SEMPRE COLOCAR TAB em estrutura de repetição
+    grafico.show()
+
+
+# CONCLUSÃO -  PROCURAR O 80/20
+

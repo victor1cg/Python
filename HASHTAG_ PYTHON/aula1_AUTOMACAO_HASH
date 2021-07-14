@@ -1,0 +1,61 @@
+import pyautogui 
+import time
+import pyperclip
+
+py.autogui.PAUSE = 1                                #1 segundo para cada linha
+
+pyautogui.alert('O programa vai começar   
+ Não use o computador')                             #Alerta para o usuario não mexer no computador
+
+# PASSO 1 : Entrar no sistema (Link do Drive)
+pyautogui.hotkey('ctrl','t')                        #abrir nova aba, hotkey é atalho
+link = 'https://drive.google.com/drive/folders/1wRTFw0sUVBjRr4hW5U9LF7DjLixRyxym'
+# ctrl+c e ctrl+v
+pyperclip.copy(link)                                #copia o link
+pyautogui.hotkey('ctrl','v')                        #cola o link
+pyautogui.press('enter')                            
+
+time.sleep(5)                                       #esperar 5 seg
+
+# PASSO 2 : Clicar no arquivo
+time.sleep(5)                                       #DICA BLASTER - esperar 5 seg até colocar o mouse na outra pagina
+pyautogui.position()                                #colocar o mouse no local desejado, e retorna o x/y
+pyautogui.click(800,257,clicks=2)                   #duplo click
+
+#PASSO 3 : Clicar para fazer Download           
+pyautogui.click(2200,300)                         
+pyautogui.click(3327,500)
+pyautogui.click(2794,250)
+time.sleep(10)
+
+#PASSO 4 : Calcular os indicadores (Faturamento  e Quantidade de vendas)
+import pandas as pd                                 #vou utilizar o pandas para ler o arquivo Excel
+tabela = pd.read_excel(r'C:\Users\victor\Downloads\Vendas') #r - ler o texto exatamente como esta
+                                                    # se quiser ler a segunda aba, colocar ('caminho', sheet_name=2)
+display(tabela)                                     #print estilizado
+
+faturamento =  tabela['Valor Final'].sum()
+qtde_produtos = tabela['Quantidade'].sum()
+
+#PASSO 4 : Enviar o email com as metricas
+pyautogui.hotkey('ctrl','t')                        
+mail = 'gmail.com'
+# ctrl+c e ctrl+v
+pyperclip.copy(mail)                                #abrir o GMAIL
+pyautogui.hotkey('ctrl','v')                        
+pyautogui.press('enter')       
+time.sleep(8)
+
+#PASSO 5 : Criar o email
+pyautogui.click(247,900)
+pyautogui.write('diretoria@gmail.com')
+pyautogui.press('tab')                              #escolher email com o TAB
+pyautogui.press('tab')                              #escolher o assunto
+pyautogui.write('ASSUNTO A SER COLOCADO')           #não aceita caracter especial
+pyautogui.press('tab')   
+texto_email = f''                                   #f antes do texto permite colocar as variaveis    
+    Prezados bom dia!
+    O faturamento foi de R${faturamento:,.2f}       #: diz q ta formatando. A , separador. 2f é duas casas
+    A quantidade de produtos vendidos foi : {qtde_produtos} 
+    att,
+''

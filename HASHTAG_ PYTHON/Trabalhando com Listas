@@ -1,0 +1,73 @@
+# Trabalhando com listas1 []                        # dicionario é {}
+
+lista_compras = ['banana', 'maçã', 'laranja']
+print(lista_compras[-1])
+> laranja                                           #ultimo item
+
+#Adicionar item
+lista_compras_append('beterraba')
+print(lista_compras)
+> ['banana', 'maçã', 'laranja','beterraba']         #append coloca no ultimo
+
+lista_compras.insert(1,'chocolate')
+> ['banana','chocolate', 'maçã', 'laranja','beterraba'] #insert coloca na posição informada
+
+#Deletar item
+del lista_compras[4]                                #vai deletar a posição
+lista_compras.remove('chocolate')                   #vai deletar o item
+
+# Transferir entre listas
+lista_compras_append('carro')
+sonho= lista_compras.pop(-1)
+print(sonho)
+> carro
+
+lista_sonhos.append(sonho)
+print(lista_sonhos)
+> carro
+
+# Criando uma lista com imput
+tarefas = []                                         #lista vazia
+tarefa = input('Insira uma tarefa')
+
+while tarefa != '' :                                # enquanto tarefa for diferente de vazio
+    tarefa = input('Insira uma tarefa')
+    tarefas.append(tarefa)
+print(tarefas[0:-1)
+
+
+# Criando exemplo real                              #duas listas sem nenhum conexão, para ligar as duas usamos a TUPLA
+lojas = ['RJ','SP','PR']
+faturamento = [10000,20000,30000]
+
+faturamento.sort()                                  #ordernar pela maior, se for do menor (reverse= True)
+print(faturamento)
+
+resultados = []
+for i in range (3)                                  #rodar o valor de i até 3
+    tupla(lojas[i-1],faturamento[i-1])              #ex,quando for i=1, pega RJ = 10000
+    resultados.append(tupla)                        #sempre adicionando na lista resultados
+n
+
+# -------------- TRABALHANDO COM LIST COMPREHENSION --------------
+lista_preco = [500,1500,2000,100,25]
+
+#Caso 1 - normal - Dobrar o preço de todos os produtos
+nova_lista_preco = []
+for preco in lista_preco= []
+    nova_lista_preco.ap0pend(preco *2)
+print (nova_lista_preco
+
+#Caso 1 - Comprehension
+nova_lista_preco2 = [preco * 2 for preco in lista_preco]  # Facilita muito criar uma nova lista
+
+
+#Caso 2 - Todos os produtos acima de R$ 1000, deverá pagar 50% de imposto
+imposto = []
+for preco in lista_preco
+    if preco > 1000
+    imposto.append(preco * 0,5)
+
+#Caso 2
+imposto2 = []                                       # LIST_COMP -> [ quem vai ser o preço, da onde vem esse numero, condicional)
+imposto2 = [preco * 0,5 for preco in lista_preco if preco > 1000]

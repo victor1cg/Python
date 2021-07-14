@@ -1,0 +1,17 @@
+# Strings no Python
+var1 = 54
+var2 = 54,5
+var_str = 'Ola'
+
+Print(type(var1))
+Print(type(var2))
+Print(type(var_str))
+
+#Respostas:
+<class 'int'>
+<class 'float'>
+<class 'str'>
+
+
+nome = 'Daniel'*3
+#resposta - DanielDanielDaniel

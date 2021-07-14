@@ -1,0 +1,13 @@
+# TRABALHANDO COM CONDICIONAIS (IF/ELSE)
+
+nome = "Daniel"
+
+if nome == "Daniel" :                   #sempre vai ter os dois pontos :
+    print (" O nome é Daniel")          #identação diz aonde começa e termina o if
+    
+
+var1 = "Daniel"
+var2 = 25
+lista = ('Daniel','Lira','Candioto')
+
+ 

@@ -1,0 +1,80 @@
+# Projeto Inteligencia Artificial C
+arteira de ações
+# deixar os 3 arquivos na mesma pasta
+
+import pandas as pd
+import os
+
+empresas = ['ABEV','AZUL4','MGLU3']                 # AQUI COLOCAR TODAS AS AÇOES
+# fundamentos = {
+#       "ABEV3" : balanço_dre_abev3
+#       "MGLU3" : balanço_dre_mglu3
+#       }
+
+fundamentos = {}                                    #dicionario vazio
+arquivos = os.listdir(balanços)                     #lista todos os arquivos em um diretorio, na pasta balanços, tem todos os balanços tipo ASAI3
+
+for arquivo in arquivos                             #traz a lista de todos os arquivos ( balanco_ABEV3.xls)
+    nome = arquivo[-9:-4]
+    if '11' in nome:                                #para empresas com 11 no ticker, BPAC11, pegamos do -10
+        nome = arquivo[-10:-4]
+    if nome in empresas:                            #so quero as empresas na lista em cima, excluir empresa recente ASAI3
+            #pegar o balanco daquela empresa
+            balanco = pd.read_excel(f'balancos/{arquivo}, sheet_name = 0)  # f é para colocar uma variavel, sheet_name pegar a aba
+            dre = pd.read_excel(f'balancos/{arquivo}, sheet_name = 1)
+            display(balanco)
+            display(dre)
+            break                                   #pegar somente 1 arquivo para verificar como fica
+           
+# 3 AJUSTES NECESSARIOS
+# NA PRIMEIRA COLUNA COLOCAR O NOME DA EMPRESA
+balanco.iloc[0,0] = nome                            #vai tirar o NaN e deixar o nome da empresa
+
+balanco.columns = balanco.iloc[0]                   #vai pegar a linha de indice 0 e transformar em cabeçalho
+balanco = balanco [1:]                              # vai pegar da linha 1 até o final, corta a linha 0
+
+# TORNAR A PRIMEIRA COLUNA. A COLUNA DE INDICE 
+balanco = balanco.set_index(nome)                   #()variavel que queremos colocar na primeira coluna, o proprio nome da coluna
+
+#--------MESMO AJUSTE DRE ------
+dre.iloc[0,0] = nome                               #vai tirar o NaN e deixar o nome da empresa
+dre.columns = dre.iloc[0]                          #vai pegar a linha de indice 0 e transformar em cabeçalho
+dre = dre [1:]                                     # vai pegar da linha 1 até o final, corta a linha 0
+dre = dre.set_index(nome)                          #()variavel que queremos colocar na primeira coluna, o proprio nome da coluna
+
+fundamentos[nome]= balanco.append(dre)             # fundamentos["ABEV3"] = 1, se a chave ABEV3 não existe, ele cria no dicio e atribui valor 1
+# nesse caso vai grudar as duas tabelas
+
+
+#----------- PEGAR AS COTAÇÕES NO TABELA DO EXCEL
+cotacoes_df = pd.read_excel("Cotacoes.xlsx")
+cotacoes {}
+display(cotacoes_df)
+for empresa in cotacoes_df["Empresa"].unique():     #faz uma lista com valores unicos de todas as empresas determinadas
+    cotacos[empresa] = cotacoes_df.loc[cotacoes_df["Empresa"]==empresa, :]     
+  #filtrar todas as linhas da empresa e ligar na chave da empresa
+  #.loc[ linha, coluna] = [todas as linhas na coluna Empresa que conter a empresa que estamos analisando, : todas colunas]
+  
+#----------- TRATAMENTO PARA NULL - 31/12/2020 DIAS DE FERIADOS FOI UTILIZADO A COTAÇÃO DO DIA ANTERIOR
+
+#----------- REMOVER EMPRESAS QUE CONTEM COTAÇÕES VAZIAS        pq, os 2 dicionarios (balanco, cotações) precisam ter as mesmas empresas
+for empresa in empresas
+    if cotacoes[empresa].isnull().values.any():     # se a tabela de cotação da empresa tem qualquer valor nullo       
+    cotacoes.pop(empresa)                           # tirar da tabela cotações
+    fundamentos.pop(empresa)                        # tirar da tabela empresa
+empresas= list(cotacoes.keys())                     # atualizar a lista de empresas
+print(len(empresas))                                
+
+#----------- JUNTAR FUNDAMENTOS C/ PREÇO COTAÇÕES AS DUAS TABELAS (mas antes precisa ajustar as datas)
+display(cotacoes['ABEV3'])                         # no cotações: jogar as datas para indice
+display(fundamentos['ABEV3'])                      # no fundamentos: Pivot linhas x colunas, ajustar formato datas, 
+
+for empresa in fundamentos
+    tabela = fundamentos[empresa].T                # Transpose linha x coluna
+    tabela.index = pd.to_datetime( tabela.index, format = '%d/%m/%Y')   #colocar format é como está hoje em dia
+    tabela_cotacao = cotacoes[empresa].set_index('Data')
+    tabela_cotacao = tabela_cotacao[['adj close']] # quero manter so essa tabela, [[]] formato df
+    
+tabela = tabela.merge(tabela_cotacao, right_index = True , left_index = True)
+display(tabela)
+break               

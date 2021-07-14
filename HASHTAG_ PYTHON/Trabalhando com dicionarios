@@ -1,0 +1,39 @@
+# TRABALHANDO COM DICIONARIOS
+
+# É muito bom para armazenar informações que precisam de algum tipo de identificador
+# Emails de gerentes de lojas:
+
+email_gerentes = {
+    'Iguatemi' : 'iguatemi@gmail.com' ,
+    'Plaza' :    'plaza@gmail.com' ,
+    'Barra' :    'barra@gmail.com' 
+    }
+    # chave :   'valor'
+    
+# Bem melhor assim do que armazenar em lista: email_gerentes = [email1,email2,email3...
+
+# 1) Se quiser descobrir o email do shopping Iguatemi
+email = email_gerentes["Iguatemi"]              # dicionario['chave']
+print(email)
+
+# 2) Adicionar um novo Shopping, se ja existir ele substitui
+email_gerentes["Leblon"] = 'leblon@gmail.com'
+
+# 3) Descobrir todos os shoppings no meu dicionario
+# for variavel in dicionario, salva todos as chaves dentro dessa variavel
+for lojas in email_gerentes
+    print(lojas)
+
+# 3.1) Descobrir todos os shoppings no meu dicionario
+print(email_gerentes.keys())
+
+# 4) Descobrir todos os emails / Quero pegar o valor e não a chave
+ for lojas in email_gerentes : 
+    email = email.gerentes[loja]
+    
+# 4.1) Descobrir todos os emails
+print(email_gerentes.values())
+
+# 5 - Retirar um shopping
+emails_gerentes.pop("Leblon")
+

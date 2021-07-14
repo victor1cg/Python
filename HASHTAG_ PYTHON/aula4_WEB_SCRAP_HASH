@@ -1,0 +1,65 @@
+#automação WEB e Busca de informações
+
+# trabalhamos em uma importadora e precisamos saber os dados diarios de Dolar, Euro , Ouro.
+# Instalar selenium: anaconda prompt > pip install selenium;
+# Instalar o chrome driver no local aonde está o python no meu computador.
+
+import selenium                     
+from selenium                       import webdriver
+from selenium.webdriver.common.keys import keys
+
+#abrir um navegador
+navegador = webdriver.Chrome()                  #diferente do pyautogui é possivel utilizar o computador enquanto roda o codigo
+navegador.get('https://www.google.com.br/')     # abrir o google pelo Chrome
+
+
+# PASSO 1: Coletar a cotação Dolar
+navegador.find_element                          #na janela do google copiar o xpath do elemento, nesse caso na caixa procurar
+navegador.find_element_by_x_path
+        ('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys('cotação Dolar')
+
+navegador.find_element_by_x_path
+        ('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(Keys.ENTER)
+        
+cotacao_dolar = navegador.find_element_by_x_path 
+    ('//*[@id="knowledge-currency__updatable-data-column"]/div[1]/div[2]/span[1]').get_attribute("data-value")
+                                                # com o get attrib conseguimos pegar somente o valor
+
+
+# PASSO 2: Coletar a cotação Euro
+navegador.find_element_by_x_path
+        ('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys('cotação Euro')
+
+navegador.find_element_by_x_path
+        ('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(Keys.ENTER)
+        
+cotacao_euro = navegador.find_element_by_x_path 
+    ('//*[@id="knowledge-currency__updatable-data-column"]/div[1]/div[2]/span[1]').get_attribute("data-value")
+                                                # com o get attrib conseguimos pegar somente o valor
+# PASSO 3: Coletar a cotação Ouro
+navegador.get("https://www.melhorcambio.com/ouro-hoje")
+cotacao_ouro = navegador.find_element_by_x_path('//*[@id="comercial"]')get_attribute("value")
+cotacao_ouro = cotacao_ouro.replace(",",".")    # substituir a , por ponto. Pois o python usa sistema USA.
+
+# PASSO 4: Imprimir a lista de produtos
+import pandas as pd
+
+tabela = pd.read_excel("Produtos.xlsx")
+display(tabela)
+
+#aonde tem dolar tem que atualizar com dolar, com isso utilizamos o loc
+tabela.loc[linha,coluna] > linhas onde moeda = dolar
+
+tabela.loc [tabela["Moeda"] == "Dolar","Cotação"] = float(cotacao_dolar)
+tabela.loc [tabela["Moeda"] == "Euro","Cotação"] = float(cotacao_euro)
+tabela.loc [tabela["Moeda"] == "Ouro","Cotação"] = float(cotacao_ouro)
+
+
+# PASSO 5: Recalcular o preço de cada produto
+tabela["Preço Base Real"] = tabela["Preço Base Original"] * tabela["Cotação"]
+tabela["Preço Final"] = tabela["Preço Base Real"] * tabela["Margem"]
+
+
+# PASSO 6: Salvar os novos preços dos produtos
+tabela.to_excel["Produtos Novo.xlsx",index=False)       #indice não entra na tabela
+

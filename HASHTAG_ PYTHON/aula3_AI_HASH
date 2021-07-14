@@ -1,0 +1,81 @@
+# AULA 3 -  PREVISÃO DE VENDAS
+# Nosso desafio é conseguir prever as vendas que vamos ter em determinado período com basestring
+# nos gastos em anuncios nas 3 grandes redes que a empres investe: TV, Jornal, Radio. Realizar um previsão
+
+# colocar o arquivo py e a base na mesma pasta
+import pandas as pd
+
+tabela = pd.read_csv('nome do arquivo.csv', sep = ";")              #se o separador for ; sep = ;
+display(tabela)
+display(tabela.info())                                              #não temos nada a corrigir
+
+# PASSO 1 - Analise Exploratoria
+# Visualizar como as informações estão distribuidas/ Verificar a correlação de cada item.
+
+import seaborn as sns                                               #sempre importa com os dois juntos
+import matplotlib.pyplot as plt                                     #quem comando os tamanhos da tabela é o plt
+
+sns.pairplot(tabela)                                                #criar com o sns e exibir com o plt
+plt.show()                                                          #vai criar varios graficos comparativos
+
+sns.heatmap(tabela.corr(), cmap='Wistia', annot = 'True')           #Esse grafico mostra a correlação entre as variaveis, quanto mais proximo de 1 ou -1 maior!
+                                                                    # annot mostra os numeros da correlação
+
+# PASSO 2 - Machine Learning
+# precisamos treinanr nossa AI - Overfitting - AI fica boa somente nessa tabela, enviesada.
+# passamos somente 70% dos dados para treino. 30% para teste
+
+from sklearn.model_selection import train_test_split                #biblioteca que ajuda em separar os dados X - Previsão / Y - Valor calculado
+
+x = tabela.drop("Vendas",axis = 1)
+y = tabela["Vendas"]
+
+x_treino,x_teste,y_treino,y_teste = train_test_split(x,y, test_size=0.3) #30% dos dados para teste
+
+# Passo 3 - Realizar a Regressão Linear e chegar em algum numero.
+# Regressão Linear e RandomForest (arvore de decisão)
+
+from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
+
+#criar a inteligencia artificial
+linear = LinearRegression()                 
+randomforest = randomforestRegressor()
+
+#treinar a inteligencia artificial
+linear.fit(x_treino,y_treino)                                       #Criar dois modelos de treino e verificar qual o melhor
+randomforest.fit(x_treino,y_treino)
+
+# Passo 4 - Teste da AI e Avaliação do melhor Modelo
+# Vamos usar o R² > 0 a 100%(otimo) o quanto o modelo consegue explicar
+# MSE (erro quadratico medio) > o quanto o modelo erra ao fazer uma previsão
+
+from sklearn import metrics
+teste_linear = linear.predict(x_teste)
+teste_random = randomforest.predict(x_teste)
+
+#R²
+r2_linear = metrics.r2_score(y_teste, teste_linear)                 #compara os valores do teste e os valores da previsão
+r2_random = metrics.r2_score(y_teste, teste_random) 
+
+# erro
+erro_linear = metrics.mean_squared_error(y_teste, teste_linear)
+erro_random = metrics.mean_squared_error(y_teste, teste_random)
+
+print(r2_linear,r2_random)                                          # o R² foi maior para o randomforest e erro foi menor, Random é o melhor modelo.
+print(erro_linear,erro_random)                                    
+
+# Passo 5 - Visualização gráfica - Tabela de comparação
+tabela_comparação = pd.DataFrame()                                  # Criamos uma tabela vazia
+tabela_comparação['Vendas Reais'] = y_teste
+tabela_comparação ['Previsão Random'] = teste_random
+tabela_comparação = tabela_comparação.reset_index(drop=true)        # dropar o indice antigo fora
+
+dsiplay (tabela_comparação)
+sns.lineplot(data=tabela_comparação)
+plt.show()                                                          # verificar graficamente os valores reais e previstos
+
+# Passo 6 - Importancia de cada variavel para as vendas
+print(randomforest.feature_importance)
+print(tabela[['Radio','Jornal']].sum()                             #verificamos que gastamos mais com jornal e o msm tem um peso menor
+ 

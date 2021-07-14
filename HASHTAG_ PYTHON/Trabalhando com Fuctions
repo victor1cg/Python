@@ -1,0 +1,27 @@
+# Trabalhando com FUNCTIONS
+
+#Automatizar processos que são repetidos dentro da programação
+
+produtos = ['ABC123','abd012','ABS111','AbB222']
+
+texto = ' abd012 '
+
+texto = texto.upper()
+texto = texto.strip()                   #retira todos os espaços antes e depois do texto
+-------
+
+def nome_funcao                         #definindo uma função, ()>argumento
+def tratar_texto(texto)
+    texto = texto.upper()
+    texto = texto.strip()  
+    return texto
+------   
+                                        # utilizando a function para 1 palavra
+texto = ' abd012 '
+texto = tratar_texto(texto)
+
+-----                                   #utilizando para uma lista de palavras
+for i , produto in enumarate(produto)
+    produtos[i] = tratar_texto(produto) #para cada produto dentro da lista produtoS, tratar o texto
+                                        # produtos[i] editar de acordo com a localização do produto na lista
+    
