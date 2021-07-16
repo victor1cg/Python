@@ -1,0 +1,20 @@
+# FORMATAÇÃO NUMERICA NO PYTHON
+
+faturamento = 1500                                      # numero decimal python usa PONTO . > 3.15
+custo = 300
+lucro = faturamento - custo
+
+print(f'O lucro foi de R${lucro}')                     #esse metodo é chamado f-string, o numero vira um texto, depois formatamos em numero
+
+margem = lucro/faturamento
+print (f' A margem foi de {margem:}')                   # : dois pontos significa que iremos formatar o dado
+
+print(f'O lucro foi de R$ {lucro}:,')                   # , > separador de milhar 
+print(f'O lucro foi de R$ {lucro}:,.2f')                # .2f > decimal/duas casas/float  | Separador de decimal precisamos de 3 informações
+
+#R: R$ 1,200.00 
+
+# Mudar para o padrão brasileiro R$
+texto_lucro = f"R${lucro}:_.2f"                         #queremos trocar ponto por virgula e vice-versa, por isso colocamos _
+texto_lucro = texto_lucro.replace('.', ',').replace('_','.')
+print(f'O lucro foi de {texto_lucro}')              
