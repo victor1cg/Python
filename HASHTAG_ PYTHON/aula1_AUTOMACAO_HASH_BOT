@@ -1,0 +1,38 @@
+# Criar um Bot com Python
+
+# BOT NO COMPUTADOR -------------------------
+import pyautogui as py
+import time
+
+pyautogui.PAUSE = 2
+
+#abrir ferramenta
+py.press('win')
+py.write('login.xlxs')                      #arquivo que simula login
+py.press('backspace')                       #pressionar para achar o arquivo
+py.press('enter')
+
+#verificar posição do mouse
+time.sleep(3)
+py.position()                               #R: point(x=1000,y=850)
+
+#preencher login
+py.click(x=500,y=750)
+py.write('victor1cg')
+
+#preencher senha
+py.click(x=500,y=530)
+py.write('123456')
+
+#clicar em fazer login
+py.click(x=500,y=100)
+py.press()
+
+# BOT NA INTERNET --------------------------  selenium precisa de webdriver para funcionar
+import  selenium as sel                      # chrome > chromedriver | firefox >geckdriver - BAIXAR de acordo com a versão 
+                                             # colocar essa chromedriver.exe aonde esta instalado o python no pc
+navegador = webdriver.chrome()
+navegador.get("http;//login.live.com/")
+time.sleep(1)
+navegador.find_element_by_xpath('//*[@id="i0116"]').send_keys("victor1cg@hotmail.com")
+navegador.find_element_by_xpath('//*[@id="isdButton2"]').click()                        #clicar no enter
