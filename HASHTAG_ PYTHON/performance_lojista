@@ -1,0 +1,375 @@
+# -----------------------------------------------------------------------------#
+#   Performance do Lojista
+#
+# 	Descrição: Menu de opções do performance lojista e tabela com as info abaixo
+#              separado por shopping e luc:
+#   - Mês
+#   - ABL
+#   - Venda
+#   - Aluguel Mínimo
+#   - Aluguel %
+#   - Encargo Comum
+#   - FPP
+#   - C.O
+#   - Taxa de Esforço
+#
+# 	Autor:	Thiago Gonçalves Guimarães Lopes
+# 	Data: 	25/09/21
+# -----------------------------------------------------------------------------#
+
+
+# -----------------------------------------------------------------------------#
+# ----  Library Import
+# -----------------------------------------------------------------------------#
+import looqbox as lq
+import numpy as np
+import calendar
+import pandas as pd
+import copy
+from datetime import date, timedelta, datetime
+
+from looqbox.global_calling import GlobalCalling
+
+import logging
+format = "%(threadName)s: %(asctime)s: %(message)s"
+logging.basicConfig(format=format, 
+                    level=logging.INFO,
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    filename = GlobalCalling.looq.response_dir() + '/parallel.log')
+
+cf = lq.library("clientfunctions.py")
+
+# -----------------------------------------------------------------------------#
+# ----  Specials  Function
+# -----------------------------------------------------------------------------#
+
+# ----  Transformation Date Function
+# Transforma a data para Mes/Ano
+def date_transform(x):
+  
+  dict_M = {
+    "01":"Jan",
+    "02":"Fev",
+    "03":"Mar",
+    "04":"Abr",
+    "05":"Mai",
+    "06":"Jun",
+    "07":"Jul",
+    "08":"Ago",
+    "09":"Set",
+    "10":"Out",
+    "11":"Nov",
+    "12":"Dez"
+  }
+
+  x = str(x)
+  year = x[2:4]
+  month = dict_M[x[5:7]]
+
+
+  return month + "/" + year
+
+
+# ----  Value Style Function
+# This is a example to create a function to pass a color code based on the element value
+def goal_style(value):
+  if (value is None) | (value == '-') | (value == 0):
+    color = "#666666"
+
+  elif value < 0.00:
+    color = "rgb(255,0,0)"
+  else:
+    color = "rgb(20, 186, 29)"
+
+  return {"color": color, "font-weight": "bold"}
+
+
+# -----------------------------------------------------------------------------#
+# ----  Get Menu
+# -----------------------------------------------------------------------------#
+def get_menu():
+  
+  
+  sql_list = [
+    {
+      "connName" : 'bigQuery',
+      "query" : """SELECT DISTINCT loja AS loja FROM `client-data-lake.hedge.dim_loja` ORDER BY 1"""
+    },
+    {
+      "connName" : 'bigQuery',
+      "query" : """SELECT DISTINCT nome_ativo AS ativo FROM `client-data-lake.hedge.dim_atv` ORDER BY 1"""
+    },
+    {
+      "connName" : 'bigQuery',
+      "query" : """SELECT DISTINCT mes AS datas FROM `client-data-lake.hedge.fct_atv` ORDER BY 1 DESC"""
+    }
+    ]
+
+  lojas, shop,  datas = cf.run_parallel(sql_list, workers = len(sql_list))
+  lojas = lojas.data['loja'].dropna().to_list()
+  shop = shop.data['ativo'].dropna().to_list()
+  datas.data['datas'] = pd.to_datetime(datas.data['datas']).apply(lambda x: date_transform(x))
+  datas = datas.data['datas'].to_list()
+  txt = ""
+  
+  for i in lojas:
+    txt += "{label: `" + i + "`, value: `da loja [" + i + "]`},"
+    txt = txt[:-1]
+    shop_list = ""
+    
+  for i in shop:
+    shop_list += "{label: `" + i + "`, value: `do shopping " + i + "`},"
+    shop_list = shop_list[:-1]
+    data_list_1 = ""
+    
+  for i in datas:
+    data_list_1 += "{label: \'" + i + "\', value: \'de " + i + "\'},"
+    data_list_1 = data_list_1[:-1]
+    data_list_2 = ""
+  
+  for i in datas:
+    data_list_2 += "{label: \'" + i + "\', value: \'a " + i + "\'},"
+    data_list_2 = data_list_2[:-1]
+  
+  
+  drop_list = """<div class='container' style='align:center'>
+  <div class='center' style='align:center;margin-left:0px'>
+  <div class='col-xs-12 col-md-12'>
+  <ComboQuestionLink prefix="performance " show-preview="yes" clear-button-text="Limpar Filtros"
+  selects="[
+    {name: 'Loja', multiSelect: false, options: [
+      """+txt+"""
+      ]}, 
+    {name: 'Shopping', multiSelect: false, options: [
+      """+shop_list+"""
+      ]},
+    {name: 'Data Base', multiSelect: false, options: [
+      """+data_list_1+"""
+      ]},
+    {name: `Data Comparação`, multiSelect: false, options: [
+      """+data_list_2+"""
+      ]}]"></ComboQuestionLink>
+  </div>
+  </div>
+  </div>"""
+  
+  html = lq.ObjHTML(drop_list)
+  
+  html_concat = '''
+  <div>
+  <p style='color:#666666; font-size: 14px; text-align: left'> \
+    Considerações Gerais
+  </p>
+    
+    <li style='color:#666666; font-size: 13px; text-align: left'> \
+  Monte sua pergunta utilizando as opções acima ou digite no campo abaixo do logo. 
+  </li>
+    </div>'''
+  
+  html_concat = lq.ObjHTML(html_concat)
+  
+  return lq.ResponseFrame([html,html_concat])
+  
+# -----------------------------------------------------------------------------#
+# ----  Get Data - Response Frame
+# -----------------------------------------------------------------------------#
+def get_data(shop, dateInt, loja, par):
+  
+  try:
+    fix = str(par.get('entities').get('$date').get('content')[0].get('segment'))
+    exemplo = 'de ago/21 a jun/19'
+    exemplo = fix
+    resultado = exemplo.replace('de ','').replace(' a ',' ').split(' ')
+    final1 = "20" + resultado[0][-2:] + '-'
+    final2 = "20" + resultado[1][-2:] + '-'
+    mes1 = resultado[0][:3]
+    mes2 = resultado[1][:3]
+    
+    dict_special = {
+    "jan":"01-01",
+    "fev":"02-01",
+    "mar":"03-01",
+    "abr":"04-01",
+    "mai":"05-01",
+    "jun":"06-01",
+    "jul":"07-01",
+    "ago":"08-01",
+    "set":"09-01",
+    "out":"10-01",
+    "nov":"11-01",
+    "dez":"12-01"
+    }
+    
+    data1 = datetime.strptime(final1 + dict_special.get(mes1), '%Y-%m-%d')
+    data2 = datetime.strptime(final2 + dict_special.get(mes2), '%Y-%m-%d')
+  
+    if data1 > data2:
+      dateInt[0], dateInt[1] = str(data2.date()),str(data1.date())
+  
+  except:
+    pass
+  
+  
+  date_diff = (datetime.strptime(dateInt[1], "%Y-%m-%d") - datetime.strptime(dateInt[0], 
+    "%Y-%m-%d")).days
+  if date_diff < 0:
+    dateInt[0], dateInt[1] = dateInt[1], dateInt[0] 
+  
+  if dateInt[0][:7] == dateInt[1][:7]:
+    datetype =  datetime. strptime(dateInt[0] , '%Y-%m-%d')
+    datetype = datetype - timedelta(weeks = 11*4)
+    dateInt[0] = str(datetype.date())
+    dateInt[0] = dateInt[0][:-2] + "01"
+  
+  sql ="""SELECT  a.mes,  b.nome_ativo, c.loja AS loja, c.luc,c.segmento,
+    SUM(c.abl) as abl,
+    SUM(a.vendas_loja) AS vendas,
+    SUM(a.aluguel_faturado) AS aluguel_faturado,
+    SUM(aluguel_percentual_faturado) AS aluguel_percentual_faturado,	
+    SUM(encargo_faturado) AS encargo_faturado,	
+    SUM(fpp_faturado) AS fpp_faturado,
+    SUM(a.encargo_faturado + a.fpp_faturado + a.aluguel_faturado + a.aluguel_percentual_faturado) AS CO,
+    CASE WHEN SUM(a.vendas_loja) = 0
+    THEN 0
+    ELSE SUM(a.encargo_faturado + a.fpp_faturado + a.aluguel_faturado + a.aluguel_percentual_faturado)/SUM(a.vendas_loja)
+    END AS txtEsforco
+    
+    
+    FROM `client-data-lake.hedge.fct_loja` AS a
+    INNER JOIN `client-data-lake.hedge.dim_atv` AS b ON a.ativo_id = b.ativo_id
+    JOIN `client-data-lake.hedge.dim_loja` AS c ON c.loja_id = a.loja_id
+    WHERE (a.mes BETWEEN '{}' AND '{}')
+    AND c.loja LIKE '{}' """.format(dateInt[0],dateInt[1],loja) +\
+    lq.paste_if("AND b.nome_ativo LIKE '",shop,"' ")+\
+    """GROUP BY c.loja, a.mes, b.nome_ativo, c.luc,c.segmento
+    ORDER BY b.nome_ativo, a.mes ASC"""        
+    
+    
+  r = cf.get_table_from_query(sql)
+  
+  if r.data.shape[0] == 0:
+    return lq.ObjMessage(lq.title_with_date("Sem dados disponíveis para o período", dateInt),"alert-warning")
+  
+  
+  r.data['mes'] = pd.to_datetime(r.data['mes']).apply(lambda x: x.strftime('%m/%Y'))
+  
+  # Data for download
+  r_aux_download = lq.ObjTable()
+  r_aux_download.data = copy.deepcopy(r.data)
+  r_aux_download.title = ["Nome Loja: " +  str(r_aux_download.data['loja'].to_list()[0])]
+  r_aux_download.data.drop(["loja","luc", "segmento"],axis=1,inplace=True)
+  r_aux_download.data.columns = ["Mês","Nome Ativo",	"ABL",	"Venda",	"Aluguel Mínimo", 
+          "Aluguel %",	"Encargo Comum","FPP",	"C.O",	"Taxa de Esforço"]
+  
+  r_aux_download.col_format = {
+      "ABL":"number:2",
+      "Venda":"number:2",
+      "Aluguel Mínimo":"number:2",
+      "Aluguel %":"number:2",
+      "Encargo Comum":"number:2",
+      "FPP":"number:2",
+      "C.O":"number:2",
+      "Taxa de Esforço":"percent:2"
+      }
+  
+  lista_tab = []
+  # Loop for print each shopping
+  for i in r.data['nome_ativo'].unique():
+    
+    for j in r.data[r.data['nome_ativo'] == i]['luc'].unique():
+      r_aux = lq.ObjTable()
+      
+      r_aux.data = r.data[(r.data['nome_ativo'] == i) & (r.data['luc'] == j)]
+      r_aux.title = [
+      'Shopping: ' + i,
+      "Nome Loja: " +  str(r_aux.data['loja'].to_list()[0]),
+      "LUC: " + str(j),
+      "Segmento: " + str(r_aux.data['segmento'].to_list()[0])
+      ]
+
+      #df do table board - r_aux
+      r_aux.data.drop(["nome_ativo","loja","luc", "segmento"],axis=1,inplace=True)
+      r_aux.data.columns = ["Mês",	"ABL",	"Venda",	"Aluguel Mínimo", "Aluguel %",	"Encargo Comum",
+      "FPP",	"C.O",	"Taxa de Esforço"]
+      
+      
+      #total
+      r_aux.total = {"Mês": '-' ,	
+      "ABL":r_aux.data['ABL'].mean(),
+      "Venda":r_aux.data['Venda'].sum(),
+      "Aluguel Mínimo":r_aux.data['Aluguel Mínimo'].sum(),
+      "Aluguel %":r_aux.data['Aluguel %'].sum(),
+      "Encargo Comum":r_aux.data['Encargo Comum'].sum(),
+      "FPP":r_aux.data['FPP'].sum(),
+      "C.O":r_aux.data['C.O'].sum(),
+      "Taxa de Esforço": 0 if r_aux.data['Venda'].sum() == 0 else  r_aux.data['C.O'].sum()/r_aux.data['Venda'].sum()
+      }
+      
+      #format
+      r_aux.col_format = {
+      "ABL":"number:2",
+      "Venda":"number:2",
+      "Aluguel Mínimo":"number:2",
+      "Aluguel %":"number:2",
+      "Encargo Comum":"number:2",
+      "FPP":"number:2",
+      "C.O":"number:2",
+      "Taxa de Esforço":"percent:2"
+      }
+      
+      
+      lista_tab.append(r_aux)
+      
+  
+  ### Botao Dowload ###   
+  temp_file = GlobalCalling.looq.temp_file("arquivo.csv")
+  r_aux_download.data.to_csv(temp_file, sep=";", index = False)
+  download = lq.ObjList(
+  link_list=[{"style": {"background": "#bfbfbf",
+                               "color": "white",
+                               "padding": "7px 20px",
+                               "width": "140px",
+                               "margin": "0 auto",
+                               "display": "block"},
+                               "text": "Download CSV",
+                               "link": lq.create_file_link("/api/tmp/download/" + temp_file)}]
+      )  
+ 
+  title = ['Performance do Lojista', lq.title_with_date("Período ",dateInt), "Loja: " + str(loja)]
+  
+  return lq.ObjMessage(type(download))
+#   return lq.ResponseFrame(lista_tab)
+
+
+# -----------------------------------------------------------------------------#
+# ----  Looq Response
+# -----------------------------------------------------------------------------#
+
+def looq_response(par):
+
+  shop = lq.look_tag("$shopping", par, None)
+  loja = ["RENNER"]
+
+  dateInt = lq.look_tag("$date",par, None)
+  if (dateInt == None) & (loja != None):
+    dateInt = cf.get_date_loja(shop, loja)
+  
+  
+  if loja is None:
+    return get_menu()
+  else:
+    return lq.map(get_data, shop, dateInt, loja, [par])
+  
+  
+# -----------------------------------------------------------------------------#
+# ----  Looq Test
+# -----------------------------------------------------------------------------#
+
+#This section uses the looq_test_question() to test the entire code and print the output in Looqbox page
+#It's simulated the parameters given in looq_response       
+
+
+lq.looq_test_question(looq_response, {"$loja": ["RENNER"]
+  # ,"$date":[["2020-08-01", "2021-07-01"]]
+  #,"$shopping": ["MOOCA"]
+})
