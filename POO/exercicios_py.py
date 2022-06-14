@@ -1,3 +1,6 @@
+'''
+Uma Classe (atrib + metodos) -> Objeto1 (atrib + metodos) ; Objetos2 (atrib + metodos); etc
+'''
 # Exercicio criando um sistema da Netflix
 
 class Cliente:
@@ -32,9 +35,25 @@ class Cliente:
 
 
 ### Importante. Uma variavel recebe a classe, e portanto usamos as funções e atributo 
-cliente = Cliente('Victor','victor@gmail.com','premium')
+cliente = Cliente('Victor','victor@gmail.com','premium')            #INSTANCIAR a CLASSE Cliente para o OBJETO cliente 
 #print(cliente.plano)                           #printar os atributos
 
-cliente.ver_filme('Top Gun','basico')
+cliente.ver_filme('Top Gun','basico')                               #acessar o OBJETO cliente, e invoca o metodo
 
 
+####-------- 2) --------####
+# exercicios de POO Python- Boson
+
+class Gato:                                     #definir a classe
+    '''Classe para trabalho com info do gato'''
+    def __init__(self,nome,peso):               #metodo construtor automatico
+        '''Inicializa capturando o nome'''
+        self.x = nome,
+        self.y = peso,
+        print(f'O gato {self.x} está com o peso {self.y} !')
+                                                #1 - classe instanciada
+nome_gato = input('\n Qual o nome do gato ?\n')
+g1 = Gato(nome_gato)                            #2 - variavel que sera utilizada no parametro
+
+peso_gato = float(input(f'\n Qual o peso do gato {nome_gato} ?\n'))
+g2 = Gato(peso_gato)    
