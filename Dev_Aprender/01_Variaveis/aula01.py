@@ -1,4 +1,5 @@
-##01 VARIAVEIS ##
+
+#! 01 VARIAVEIS
 
 from numpy import VisibleDeprecationWarning, dtype
 
@@ -10,12 +11,12 @@ a, b, c, d = 1, 1, 3, 4
 # print()
 # print(velocidade)
 
-# 02 Ambiente -
+#! 02 Ambiente -
 """Ir na pasta do arquivo .py, e segurar o shift + Mouse(esquerdo) -> Abrir Power Shell
    No Power Shell: ls ; python aula01.py
 """
 
-# 03 Indentação
+#! 03 Indentação
 if a > b:
     print(a)
 
@@ -28,18 +29,18 @@ else:
         os valores"""
     )
 
-# Caracteres de escape
+#* Caracteres de escape
 """print("\nCaracteres de espaço \n pula linha")
 print("\nA barra invertida considera 'o caracter")     # Aqui uma barra invertida
 print("\nArquivo localizado em C:\\usuario\\scripts")  # Aqui uma barra invertida
 print(r"\\nArquivo localizado em C:\\usuario\\scripts")   # Aqui o r considera tudo como literal """
 
-# String Dinamico
+#* String Dinamico
 nome = "Cavalo"
 email = "victor@hotmail.com"
 print(f"Ola {nome} voce colocou o email : {email}")
 
-# Metodos comuns String
+#! 04 Metodos comuns String
 nome_curso = "  data Science  ! "
 print(nome_curso.upper())
 print(nome_curso.lower())
@@ -56,3 +57,5 @@ aa = "frase"
 bb = "de"
 cc = "efeito."
 print(f"{aa.capitalize()} {bb} {cc.upper()}")
+
+
