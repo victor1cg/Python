@@ -43,7 +43,5 @@ user_01 = User(nome,idade,nascimento)
 user_01.infos()
 
 
-# todo Modulo 2 - Mensagem boas vindas
-
 
 
