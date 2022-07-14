@@ -1,6 +1,4 @@
 import sys
-from logging import info
-from regex import D
 import random
 
 #email sera criado apartir do nome
@@ -31,8 +29,7 @@ def criar_email(*nomes):
         emails.append(a)
     return emails
 
-nomes = input_nomes()                 
-emails = criar_email(nomes)          #utilizo o return do input_nomes no criar_email. Porem resultado vem como tupla.
+nomes = input_nomes()                               #input dos nomes    
 
 #* 1 - Quais dados o user precisa ? Printar na tela.
 # nomes = ['Guido', 'Joao Hader','Felipe','Vitor','Elux']
@@ -63,7 +60,8 @@ def print_dados(*args):
             print ('\n Insira um valor valido de 1 a 5')
     return dados_salvos
 
-info_desejadas = input('''
+def info_desejadas():
+    info = input('''
 -------------
 Bem-vindo ao gerador de dados de Teste - Para finalizar o programa , digite 'Parar'.
 -------------
@@ -73,21 +71,20 @@ Escolha uma ou mais opcoes abaixo a serem geradas aleatoriamente:
 [3] - Telefone
 [4] - Cidade
 [5] - Estado
-Digite uma ou várias opcoes entre virgulas !: \n
+Digite uma ou várias opcoes entre virgulas !:\n
 ''')
+    return info
 
-info_desejadas = str(info_desejadas).split(',')     #transformar o input em lista
-dados_salvos = print_dados(info_desejadas)          #chama a funcao
+
 
 #* 2 - O user deseja salvar em txt ?
 # dados.txt
-# dados_salvos = ['a','Guido','email','cidade']
 
 #salva as informacoes selecionadas no dados.txt
 def salva_dados(x):
     x = str(x).lower()
     if x == 'y':
-        with open('dados.txt','w') as arquivo:
+        with open('dados.txt','a') as arquivo:
             for dado in dados_salvos:
                 arquivo.write(str(dado) + '\n') 
     elif x == 'n':
@@ -100,9 +97,13 @@ def info_salvas():                      #somente sai da função inserindo Y ou 
         a = input('\n Deseja salvar as informacoes em txt ? [Y/N] : ')
     return a
 
-salva_dados(info_salvas())
+emails = criar_email(nomes)                         #utilizo o return do input_nomes no criar_email. Porem resultado vem como tupla.
   
-#todo 3 - Digitar 'parar' finaliza o programa
+#* 3 - Digitar 'parar' finaliza o programa
 # inserido uma clausula no if
 
 # todo 4 - Novos dados devem ser append ao anterior
+while True:
+    info = str(info_desejadas()).split(',')             #transformar o input em lista
+    dados_salvos = print_dados(info)          #lista com os dados printado que podem ser salvo em txt
+    salva_dados(info_salvas())                          #
