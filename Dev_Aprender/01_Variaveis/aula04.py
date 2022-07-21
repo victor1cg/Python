@@ -3,12 +3,12 @@
 """ 
 r - Usado somente para ler arquivos
 w - Usado somente para escrever algo
-r+ - usado para ler e escrever algo
-a - usado para acrescentar algo """
+r+ - usado para ler e escrever algo (sobrescrever)
+a - usado para acrescentar algo (append) """
 
 telefone = [11111,22222,33333,44444,55555]
 
-# ESCRVER ARQUIVO
+# ESCREVER ARQUIVO
 # with open ('arquivo.txt','a') as arquivo:
 #     for valor in telefones:
 #         arquivo.write(str(valor)+ '\n')

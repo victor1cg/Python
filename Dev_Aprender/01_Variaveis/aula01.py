@@ -1,7 +1,7 @@
 
 #! 01 VARIAVEIS
 
-from numpy import VisibleDeprecationWarning, dtype
+from numpy import dtype
 
 velocidade = 10
 

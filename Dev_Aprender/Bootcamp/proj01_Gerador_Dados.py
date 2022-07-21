@@ -1,9 +1,11 @@
+# link com o script - https://pastebin.pl/view/68f5bec0
+
 import sys
 import random
 
 #email sera criado apartir do nome
 # emails = ['a','b','c','d','e']
-# nomes = ['Guido', 'Joao Hader','Felipe','Vitor','Elux']
+# nomes = ['Felipe', 'Joao','Daniel','Vitor','Maria']
 telefone = [11111,22222,33333,44444,55555]
 cidade = ['SP','RJ','BH','PO','CW']
 estado = ['SP','RJ','MG','RS','PR']

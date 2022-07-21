@@ -26,7 +26,8 @@ exibir_preco('Iphone',4500)
 exibir_preco(preco=4800,produt='Samsumg')
 
 #3)
-#todo Podemos obrigar a ser argumento obrigatorio com o *
+#todo Podemos obrigar a ser argumento obrigatorio com o *. 
+#O que estiver antes OBRIGATORIO(produt)
 def exibir_preco2(produt,*, preco, origem='China'):
     print(f'{produt} esta no valor de {preco}. Origem {origem}' )
 
