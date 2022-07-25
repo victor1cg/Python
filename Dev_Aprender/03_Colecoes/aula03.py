@@ -22,7 +22,7 @@ pessoa.sort(key=itemgetter('nome'), reverse = True)
 # tupla ou lista de lista consigo sort pelo indice
 matriz = [[2,15],[4,5],[10,9]]
 matriz.sort(key=itemgetter(1)) 
-print(matriz)
+# print(matriz)
 
 
 #! Tuplas - não é tipado, é imutavel, e ordenado.

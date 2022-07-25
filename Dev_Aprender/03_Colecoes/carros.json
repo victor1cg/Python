@@ -1,0 +1,22 @@
+[
+    {
+        "marca": "Nissan",
+        "Preco": 18000,
+        "Cor": "Prata"
+    },
+    {
+        "marca": "Audi",
+        "Preco": 11000,
+        "Cor": "Prata"
+    },
+    {
+        "marca": "Volks",
+        "Preco": 15000,
+        "Cor": "Vermelho"
+    },
+    {
+        "marca": "Volks",
+        "Preco": 15000,
+        "Cor": "Azul"
+    }
+]
