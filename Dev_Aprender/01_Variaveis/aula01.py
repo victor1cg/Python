@@ -59,3 +59,12 @@ cc = "efeito."
 print(f"{aa.capitalize()} {bb} {cc.upper()}")
 
 
+#! PRINT - Substituição
+#* % - Esse aqui veio do Python 2
+print('A programação em %s é muito mais %s' % ('python','facil'))
+print('A programação em %(a)s é muito mais %(b)s' % {'a':'python','b':'facil'})
+# 0.1 casa decimal
+print('A programação em %(a)s possui %(b).1f anos' % {'a':'python','b':14.5})
+
+#* .format - Esse é Python 3
+print('A programação em {} possui {:.1f} anos' .format('python',14.5))

@@ -40,3 +40,9 @@ anos.clear()
 
 #Contar a qtde de ocorrencias
 anos.count(2)           #qtde de vezes que aparece o numero 2
+
+#! Listas - ENUMERATE - percorrer a lista, onde estamos atualmente
+#sempre retorna um indice e o valor real. Indice começa em 1
+
+""" for i,v in enumerate(pessoa):
+    print(i,v) """
