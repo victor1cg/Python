@@ -1,0 +1,58 @@
+
+#! Utilizando o POSTMAN **
+https://www.youtube.com/watch?v=5S9mMBEtJK4&ab_channel=JuliodeLima
+
+Podemos criar uma nova collection, local onde guardamos GET, PUTS, POSTS.
+
+1) 
+- Authentication - 
+Realizar um POST na URI de acesso : http://localhost.com/api/v1/auth
+
+Contendo no body:
+{
+    email: 
+    senha:
+}
+
+>> Ira retornar :
+{
+    data {
+        'token': 'Awjlela1294Keja'
+        },
+        errors:[]
+}
+
+Caso não retorne o token, necessario ligar o servidor do token.
+-------------
+
+2) Colocar a URI em uma variavel, para facilitar o acesso:
+
+> Environments:
+variable : servidor
+Initial e Current :  http://localhost.com/api
+
+> Agora conseguimos utilizar no POST p/ autenticar:
+{{servidor}}/v1/auth
+------------
+
+3) Realizar um POST
+Verificar no swagger quais os parametros necessarios:
+> Header: criar o parametro Authentication : (colar o token) 'Awjlela1294Keja'
+> Body : colar os valores necessarios, ex viagem:
+    {
+        'acompanhante': 'Maria'
+        'data_ida': '2022-07-30'
+        'data_volta': '2022-08-30'
+    }
+
+4) Salvar o token em uma variavel. Vou popular a variavel criada.
+> Environments: 
+variable = token
+Initial e Current : nao colocar nada
+
+> Collection > Test:
+const resposta = pm.response.json();
+pm.globals.set("token",resposta.data.token); #no Snippet ao lado > Get a Global Variable
+
+>Environments, conferir se populou
+>Headers > Authentication : {{token}}
