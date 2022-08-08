@@ -56,3 +56,9 @@ pm.globals.set("token",resposta.data.token); #no Snippet ao lado > Get a Global 
 
 >Environments, conferir se populou
 >Headers > Authentication : {{token}}
+
+---------------
+
+load - from a json file | dump - gerar objeto in json format
+loads- LOAD from String | dumps - obtem uma String json;
+dicionario é o objeto, json é um arquivo (não podemos consultar indice)

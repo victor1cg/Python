@@ -7,15 +7,15 @@ from flask import Flask, render_template
 app = Flask (__name__)
 
 #routing
-@app.route('/')         #creating a route on our server that is just single slash - HOME
+@app.route('/')         #creating a route on our server that is just single slash - HOME (Local Host)
 def home():
-    return 'Hello World '
+    return 'Hello My Blog '
 
-@app.route('/about')         #creating a route on our server that is just single slash - HOME
+@app.route('/about')         #another page 
 def about():
     return 'The About page'
 
-#* Posso usar diretamente o codigo, ou melhor chamar o arquivo HTML
+#* Posso usar diretamente o codigo, ou melhor aind chamar o arquivo HTML;
 """ @app.route('/blog')
 def blog():                     
     return '''
@@ -26,12 +26,13 @@ def blog():
     ''' """
 @app.route('/blog')
 def blog():                     
-    return render_template('blog.html', author = 'Bob') #author é a variavel que eu passei no HTML.
+    return render_template('blog.html', author = 'Bob', sunny=True) #author é a variavel que eu passei no HTML.
 
 #* Creating a lot pages
 @app.route('/blog/<blog_id>')
 def blogpost(blog_id):
     return 'This is blogpost number ' + str(blog_id)
 
-if __name__ == '__main__':  #testar o app
+#! Testing the app
+if __name__ == '__main__':  
     app.run()
