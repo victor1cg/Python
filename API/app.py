@@ -13,7 +13,7 @@ from sqlalchemy.sql import func
 from flask_marshmallow import Marshmallow # object serialization, SCHEMA
 
 import json
-#sqlite nao precisa instalar/chamar a biblioteca, padroa no python
+#sqlite nao precisa instalar/chamar a biblioteca, padrao no python
 
 app = Flask(__name__)   #Criando a aplicação
 
