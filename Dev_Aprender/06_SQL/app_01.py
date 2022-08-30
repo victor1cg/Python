@@ -46,7 +46,7 @@ def obter_autores():
     autores = Autor.query.all()         #chama toda a tabela
     lista_autores = []
     for autor in autores:
-        autor_atual = {}
+        autor_atual = {}                #popular é preencher com informações
         autor_atual['id_autor'] = autor.id_autor
         autor_atual['nome'] = autor.nome
         autor_atual['email'] = autor.email
@@ -70,21 +70,51 @@ def obter_autores_id(id_autor):
 @app.route('/autores', methods = ['POST'])
 def inserir_autores():
     novo_autor = request.get_json()
-    autor = Autor(nome = novo_autor['nome'], email = novo_autor['email'], senha = novo_autor['senha'])
+    autor = Autor(nome = novo_autor['nome'], senha = novo_autor['senha'],email = novo_autor['email'])
     
     #salvar no db e gravar
     db.session.add(autor)
     db.session.commit()
-    return jsonify({'Usuario cadastrado com sucesso',200})
+    return jsonify({'Autor cadastrado com sucesso',200})
 
 
 @app.route('/autores/<int:id_autor>', methods = ['PUT'])
 def alterar_autor(id_autor):
-    pass
+    usuario_alterar = request.get_json()
+    autor = Autor.query.filter_by(id_autor = id_autor).first()
+    if not Autor:
+        return jsonify({'Autor não encontrado ! '})
+    
+    #Verificar os dados a alterar, caso não encontre continua (try,except)
+    try:
+        usuario_alterar['nome']:
+        autor.nome = usuario_alterar['nome']
+    except:
+        pass
+    try:
+        usuario_alterar['email']:
+        autor.email = usuario_alterar['email']
+    except:
+        pass
+    try:    
+        usuario_alterar['senha']:
+        autor.senha = usuario_alterar['senha']
+    except:
+        pass
+
+    db.session.commit()
+    return jsonify({'Autor alterado com sucesso'},200)
+
 
 @app.route('/autores/<int:id_autor>', methods = ['DELETE'])
 def deletar_autor_id(id_autor):
-    pass
+    autor_deletar = Autor.query.filter_by(id_autor = id_autor).first()
+    if not Autor:
+        return jsonify({'Autor não encontrado'},200)
+    
+    db.session.delete(autor_deletar)
+    db.session.commit()    
+    return jsonify({'Autor Excluido ! '},200)
 
 if __name__ == '__main__':
     app.run(port=5000, host= 'localhost', debug=True)
