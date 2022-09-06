@@ -93,7 +93,7 @@ def nova_postagem(autor):
     return jsonify({'mensagem': 'Postagem criada com sucesso'})
 
 
-@app.route('/postagem/<int:indice>',methods=['PUT'])
+@app.route('/postagem/<int:id_postagem>',methods=['PUT'])
 @token_obrigatorio
 def alterar_postagem(autor, id_postagem):
     postagem_alterada = request.get_json()
@@ -110,7 +110,7 @@ def alterar_postagem(autor, id_postagem):
     return jsonify({'mensagem': 'Postagem alterada com sucessso'})
 
 
-@app.route('/postagem/<int:indices>',methods=['DELETE'])
+@app.route('/postagem/<int:id_postagem>',methods=['DELETE'])
 @token_obrigatorio
 def excluir_postagem(autor, id_postagem):
     postagem_a_ser_excluida = Postagem.query.filter_by(

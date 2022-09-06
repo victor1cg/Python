@@ -17,6 +17,24 @@ Fluxo:
 Fazemos isso criando um decorator e acoplando em todas as funções;
 > from functools import wraps
 
+Deploy Heroku:
+1. Indicar no Heroku qual o repositorio do github;
+2. Criar um ambiente virtual: 
+> python -m venv heroku-api 
+> .\heroku-api\Scripts\activate
+> pip install flask pyjwt flask_sqlalchemy 
+> pip install gunicorn (servidor mais potente)
+3. Criar um arquivo Procfile (colocar os comandos):
+dentro do arquivo:
+> python schema_db_02.py
+> web: gunicorn
+> app: app
+4.Requirements:
+> pip freeze > requirements.txt
+5. Incluir no gitignore o venv:
+> heroku-api/
+
+
 > postagens = [
     {
         "titulo":"Minha historia",

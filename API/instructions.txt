@@ -1,3 +1,4 @@
+#! Ainda Não funciona completamente !#
 #! Criando o database via Terminal
 
 No terminal Python:
