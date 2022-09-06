@@ -11,7 +11,13 @@
 5. Add o banco de dados para cada chamado de Postagem e Autor
 6. Add autenticação a nossas APIs - Deixa API segura com token de autenticação;
 
-postagens = [
+Fluxo: 
+1) Realizar o Login e copiar o token; 
+2) Com o token poder ter acesso as duas tabelas : autor e postagem
+Fazemos isso criando um decorator e acoplando em todas as funções;
+> from functools import wraps
+
+> postagens = [
     {
         "titulo":"Minha historia",
         "autor":"Amanda Dias"

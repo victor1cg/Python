@@ -46,7 +46,7 @@ def inicializar_banco():
     # db.create_all()
     # autor = Autor(nome = 'jow',email = 'jow@gmail.com',senha = '1234',admin = True)
     # db.session.add(autor)
-    post = Postagem(titulo = 'House of Dragon',id_autor = 2)
+    post = Postagem(titulo = 'Lord of Rings',id_autor = 4)
     db.session.add(post)
     db.session.commit()
 
