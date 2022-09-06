@@ -1,11 +1,14 @@
 
 #! API Flask
 
-from flask import Flask, jsonify, request
+from datetime import datetime
+from flask import Flask, jsonify, request, make_response
 from schema_db_02 import Autor, Postagem, app, db
 import json
+import jwt
+from datetime import datetime, timedelta
+#Rota padrão - GET https://localhost:5000
 
-#app = Flask(__name__)
 
 #* ---------- POSTAGENS -------------
 @app.route('/')
@@ -87,17 +90,17 @@ def alterar_autor(id_autor):
     
     #Verificar os dados a alterar, caso não encontre continua (try,except)
     try:
-        usuario_alterar['nome']:
+        usuario_alterar['nome']
         autor.nome = usuario_alterar['nome']
     except:
         pass
     try:
-        usuario_alterar['email']:
+        usuario_alterar['email']
         autor.email = usuario_alterar['email']
     except:
         pass
     try:    
-        usuario_alterar['senha']:
+        usuario_alterar['senha']
         autor.senha = usuario_alterar['senha']
     except:
         pass
@@ -118,3 +121,24 @@ def deletar_autor_id(id_autor):
 
 if __name__ == '__main__':
     app.run(port=5000, host= 'localhost', debug=True)
+
+
+#*------------ LOGIN / TOKEN
+# verificar se o login é valido - make_response adding additional HTTP headers.
+# dentro da tabela Autor(blog.db) temos usuario e senha
+@app.route('/login')
+def login():
+    auth = request.authorization
+    if not auth or auth.username or not auth.password:
+        return make_response('Login Inválido',401,{'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
+
+    usuario = Autor.query.filter_by(nome=auth.username).first()
+    if not usuario:
+        return make_response('Login Inválido',401,{'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
+    
+    if auth.password == usuario.senha:
+        token = jwt.encode({'id_autor':usuario.id_autor,'exp': datetime.utcnow()+ timedelta(minutes=30)},app.config['SECRET KEY'])
+        
+        return jsonify({'token':token.decode('UTF-8')})
+
+    return make_response('Login inválido', 401, {'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
