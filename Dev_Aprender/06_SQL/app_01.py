@@ -13,7 +13,16 @@ from datetime import datetime, timedelta
 #* ---------- POSTAGENS -------------
 @app.route('/')
 def obter_postagens():
-    return jsonify (postagens)
+    postagem = Postagem.query.all()
+
+    list_postagens = []
+    for post in postagem:
+        postagem_atual = {}
+        postagem_atual['id_postagem'] = post.id_postagem
+        postagem_atual['titulo'] = post.titulo
+        postagem_atual['id_autor'] = post.id_autor
+        list_postagens.append(postagem_atual)
+    return jsonify ({'postagens': list_postagens})
 
 #* GET com indice;
 @app.route('/postagens/<int:indice>', methods = ['GET']) #somente o metodo GET
@@ -119,26 +128,25 @@ def deletar_autor_id(id_autor):
     db.session.commit()    
     return jsonify({'Autor Excluido ! '},200)
 
-if __name__ == '__main__':
-    app.run(port=5000, host= 'localhost', debug=True)
-
 
 #*------------ LOGIN / TOKEN
 # verificar se o login é valido - make_response adding additional HTTP headers.
 # dentro da tabela Autor(blog.db) temos usuario e senha
-@app.route('/login')
+@app.route('/login',methods = ['GET'])
 def login():
     auth = request.authorization
-    if not auth or auth.username or not auth.password:
-        return make_response('Login Inválido',401,{'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
-
+    if not auth or not auth.username or not auth.password:
+        return make_response('Login inválido', 401, {'WWW-Authenticate': 'Basic realm="Login obrigatório"'})
     usuario = Autor.query.filter_by(nome=auth.username).first()
+   
     if not usuario:
-        return make_response('Login Inválido',401,{'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
+        return make_response('Login inválido', 401, {'WWW-Authenticate': 'Basic realm="Login obrigatório"'})
     
     if auth.password == usuario.senha:
-        token = jwt.encode({'id_autor':usuario.id_autor,'exp': datetime.utcnow()+ timedelta(minutes=30)},app.config['SECRET KEY'])
-        
-        return jsonify({'token':token.decode('UTF-8')})
+        token = jwt.encode({'id_autor': usuario.id_autor, 'exp': datetime.utcnow() + timedelta(minutes=30)},app.config['SECRETE_KEY'])
+        return jsonify({'token':str(token)})
+    
+    return make_response('Login inválido', 401, {'WWW-Authenticate': 'Basic realm="Login obrigatório"'})
 
-    return make_response('Login inválido', 401, {'WWW-Authenticate':'Basic realm="Login Obrigatorio !"'})
+if __name__ == '__main__':
+    app.run(port=5000, host= 'localhost', debug=True)

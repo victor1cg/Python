@@ -42,10 +42,12 @@ class Autor(db.Model) :
 #Criar usuarios administradores
 
 def inicializar_banco():
-    db.drop_all()
-    db.create_all()
-    autor = Autor(nome = 'jow',email = 'jow@gmail.com',senha = '1234',admin = True)
-    db.session.add(autor)
+    # db.drop_all()
+    # db.create_all()
+    # autor = Autor(nome = 'jow',email = 'jow@gmail.com',senha = '1234',admin = True)
+    # db.session.add(autor)
+    post = Postagem(titulo = 'House of Dragon',id_autor = 2)
+    db.session.add(post)
     db.session.commit()
 
 if __name__ == '__main__':
