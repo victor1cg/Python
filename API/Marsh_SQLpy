@@ -1,0 +1,36 @@
+
+# ! Marshmallow
+# Facilita a integração entre o objeto json que vem da minha API
+# e os dados para input no meu DB;
+# Converted from very simple list, string, dict into object;
+
+# from flask_marshmallow import Marshmallow
+import sqlite3
+
+# ma = Marshmallow()
+
+# def configure(app):
+#     ma.init_app(app)
+
+#! 6 - CRIANDO AS FUNÇÕES
+conn = sqlite3.connect('sold.db')
+sql = conn.cursor()
+table_name = 'sellout'
+#obtendo info da da tabela
+sql.execute('PRAGMA table_info({})'.format(table_name))
+colunas = [tupla[1] for tupla in sql.fetchall()]
+print('Colunas:', colunas)
+
+# results = sql.execute("""SELECT * FROM sellout;""").fetchall()
+listofTables = sql.execute(
+        ''' SELECT name FROM sqlite_master 
+            WHERE type = 'table' 
+            ORDER BY NAME;
+        '''
+        ).fetchall()
+
+
+for x in listofTables:
+    print(f'\n{x}')
+
+print('\nMostrar dados')
