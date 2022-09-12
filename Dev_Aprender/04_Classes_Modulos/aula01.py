@@ -2,7 +2,6 @@
 #! 01 - MODULOS
 
 # isso aqui já é um MODULO - É um arquivo python normal.
-import datetime
 
 #! 02 - Quando usar modulos ? 
 # Separar funcionalidades relacionadas.
