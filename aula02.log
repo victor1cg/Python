@@ -1,0 +1,8 @@
+2022-09-12 10:24:05 - DEBUG- logging no nivel
+2022-09-12 10:24:05 - INFO- logging no nivel 
+
+2022-09-12 10:29:42 - INFO- victor1cg@hotmail.com logou no sistema
+2022-09-12 10:34:03 - INFO- victor1cg@hotmail.com - logou no sistema;
+2022-09-12 10:35:11 - INFO- victor1cg@hotmail.com - logou no sistema;
+2022-09-12 10:37:50 - ERROR- victor1cg@hotmail.com - senha incorreta: 123;
+2022-09-12 10:38:11 - ERROR- victor1cg@hotmail.com - invalid literal for int() with base 10: 'abc';
