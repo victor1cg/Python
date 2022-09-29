@@ -20,7 +20,9 @@ shutil.move()
 shutil.rmtree()
  """
 #compactar
-shutil.make_archive(base_name = 'docs_backup',format = 'zip',
+""" shutil.make_archive(base_name = 'docs_backup',format = 'zip',
                     root_dir= r'Dev_Aprender\\08_Automacao\\docs')
-#descompactar
+#descompactar """
 # shutil.unpack_archive()
+
+shutil.move(os.getcwd() + os.sep + 'aula03_csv.py',r'Dev_Aprender\\08_Automacao')
