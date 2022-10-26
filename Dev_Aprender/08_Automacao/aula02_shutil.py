@@ -1,7 +1,7 @@
 
 #! SHUTIL
 
-""" O módulo shutil oferece várias operações de alto nível em arquivos e coleções de arquivos. 
+""" é usado para copiar o conteúdo do arquivo de origem para o arquivo ou diretório de destino . 
 São fornecidas funções que possuem suporte a cópia e remoção de arquivos. """
 import shutil
 import os
