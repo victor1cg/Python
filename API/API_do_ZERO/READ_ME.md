@@ -83,3 +83,40 @@ Esta será a estrutura final (se preferir criar manualmente)
     ├── conftest.py            # Config do Pytest
     ├── __init__.py
     └── test_api.py            # Tests da API
+```
+
+## Requirements.in
+Não serve para o deploy de aplicação. Necessario as versoes de cada library.
+O comando abaixo gera um txt com as versões.
+
+> pip-compile requirements.in  
+
+alembic==1.8.1  
+    # via -r requirements.in  
+anyio==3.6.2 ...
+
+## Pamps/app.py
+Instanciar 
+
+## MANIFEST.in
+Quero rodar isso dentro de um container, por isso preciso criar o instalador do pamps.
+Listar todos os arquivos que são necessarios para rodar o programa.  
+> ls pamps - mostra todos os arquivos dentro do pamps
+> graft pamps - arrasta os arquivos dentro do pamps.
+
+## SETUP.py
+Arquivo de confirguração basica, simplesmente copiar de outros projetos e colar nesse.
+Ele permite ler a biblioteca requirements.txt, criar uma lista e instalar todos.
+
+----
+## Instalar as libs
+> pip install -e.  
+Ira instalar localmente nesse primeiro momento, e o projeto pamps.
+>> R: Running setup.py develop for pamps  
+OK!
+
+Mostra os detalhes do projeto:
+> pip show pamps  
+
+----
+# Containers

@@ -1,0 +1,15 @@
+fastapi                     #Dev API
+uvicorn                     #servidor de aplicação. ASGI, assincrono.
+sqlmodel                    #descrever tabelas do SQL
+typer                       #linha de comando
+dynaconf                    #exportar variavel no ambiente
+jinja2                      #templates
+python-jose[cryptography]   #encriptar tokens
+passlib[bcrypt]             #hash do password
+python-multipart            #upload de imagens
+psycopg2-binary             #conexao no postgrees
+alembic                     #database migration
+rich                        #deixar o terminal mais bonito
+
+#nao serve para o deploy de aplicação;
+#necessario as versoes de cada library;
