@@ -120,3 +120,16 @@ Mostra os detalhes do projeto:
 
 ----
 # Containers
+
+Os containers Linux® e as máquinas virtuais são ambientes de computação empacotados que combinam vários componentes de TI e os isolam do restante do sistema. As principais diferenças entre eles tema ver com escala e portabilidade. Como EMPACOTAR O APLICAÇÃO ?
+
+**-Containers** : costumam ser usados para empacotar funções individuais que realizam tarefas específicas, os famosos microsserviços. Como são leves e têm um sistema operacional compartilhado, os containers são muito fáceis de migrar entre vários ambientes.  
+
+>Imagem é um template que será utilizado por seu container. Nela é definido o que vai rodar ali dentro, quais as bibliotecas e configurações estarão presentes no seu container.
+
+*As novas práticas de TI* (desenvolvimento nativo em nuvem, CI/CD e DevOps) existem graças à divisão das cargas de trabalho nas menores unidades úteis possíveis, que geralmente são uma função ou um microsserviço. Essas unidades são melhor empacotadas em containers.
+
+Nas arquiteturas de *TI tradicionais* (monolíticas e legadas), todos os elementos de uma carga de trabalho são mantidos em um arquivo grande que não pode ser dividido. Por isso, ele precisa ser empacotado como uma unidade completa em um ambiente maior, frequentemente uma máquina virtual.
+
+**-Docker** : plataforma open source para construir, armazenar, distribuir e rodar contêineres.  
+**-Kubernetes** : gerenciador de contêineres .
