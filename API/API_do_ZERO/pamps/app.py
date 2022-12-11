@@ -7,4 +7,7 @@ app = FastAPI(
     description = "Pamps is a posting app"
 )
 
+@app.get('/')
+async def index():
+    return {"first":"API"}
 

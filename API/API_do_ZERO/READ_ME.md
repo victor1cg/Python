@@ -133,3 +133,79 @@ Nas arquiteturas de *TI tradicionais* (monolíticas e legadas), todos os element
 
 **-Docker** : plataforma open source para construir, armazenar, distribuir e rodar contêineres.  
 **-Kubernetes** : gerenciador de contêineres .
+---
+
+Na nossa aplicação, vamos definir no **Dockerfile.dev** é uma camada sendo definido no conteiner.
+Utilizaremos um script padrão.
+
+### CRIAR A IMAGEM
+> no terminal rodar:
+>> docker build -f Dockerfile.dev -t pamps:latest .  
+
+-f file  
+-t tag(nome para esse arquivo, ou pode usar 0.1.0)  
+. IMPORTANTE utilizar o *ponto* pois quero criar a imagem no local que eu estou.  
+>>Successfully built 56f8527587dd  
+>>Successfully tagged pamps:latest
+
+A imagem fica guardada para sempre, o Container sera criado apartir dessa imagem.  
+Containers são efemeros, por isso devemos utilizar --rm
+>docker run --rm -it -v $(pwd):/home/app/api -p 8000:8000 pamps  
+--rm remove  
+-it iterative  
+-v volume + local e imagem (pamps)
+
+API RODANDO!! 
+Ja possuo a porta de acesso a minha API: *http://0.0.0.0:8000*  
+Se colocar */docs* gera automaticamente um swagger (origem app.py)
+
+A API vai ser atualizada automaticamente quando detectar mudanças no código, somente para teste edite pamps/app.py e adicione
+
+```
+@app.get("/")
+async def index():
+    return {"hello": "world"}
+```
+## POSTGRESQL  
+É um sistema gerenciador de banco de dados Open Source. Para isso vamos utilizar o PostgreSQL dentro de um container.
+
+Colar o codigo dentro de postgres > create-databases.sh. sh é linguagem bash.
+Com isso conseguimos automatizar um codigo para criar o DB.
+
+Utilizaremos o **docker_compose.yaml** para subir ao mesmo tempo o DB e a API.
+
+### Docker compose
+Agora para iniciar a nossa API + o Banco de dados vamos precisar de um orquestrador de containers, em produção isso será feito com Kubernetes mas no ambiente de desenvolvimento podemos usar o docker-compose.
+
+Edite o arquivo docker-compose.yaml
+
+- Definimos 2 serviços api e db  
+- Informamos os parametros de build com os dockerfiles  
+- Na api abrimos a porta 8000  
+- Na api passamos 2 variáveis de ambiente 
+- PAMPS_DB__uri e PAMPS_DB_connect_args para usarmos na conexão com o DB  
+- Marcamos que a api depende do db para iniciar.  
+- No db informamos o setup básico do postgres e pedimos para criar 2 bancos de dados, um para a app e um para testes.
+
+>docker-compose build
+
+---
+### MODELAGEM
+
+#### Definindo os models com Pydantic
+
+Vamos modelar o banco de dados definido acima usando o SQLModel, que é uma biblioteca que integra o SQLAlchemy e o Pydantic e funciona muito bem com o FastAPI.  
+
+
+#### Settings
+Agora que temos pelo menos uma tabela mapeada para uma classe precisamos estabelecer conexão com o banco de dados e para isso precisamos carregar configurações
+
+Edite o arquivo pamps/default.toml
+
+Vamos agora inicializar a biblioteca de configurações:
+
+Edite pamps/config.py
+
+#### Conexão com o banco de dados
+db.py - Sera o engine do banco de dados
+Utiliza o boiler plate (template), e ajustar conforme necessario.
