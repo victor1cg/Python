@@ -89,7 +89,7 @@ Esta será a estrutura final (se preferir criar manualmente)
 Não serve para o deploy de aplicação. Necessario as versoes de cada library.
 O comando abaixo gera um txt com as versões.
 
-> pip-compile requirements.in  
+``` pip-compile requirements.in ```  
 
 alembic==1.8.1  
     # via -r requirements.in  
@@ -109,14 +109,15 @@ Arquivo de confirguração basica, simplesmente copiar de outros projetos e cola
 Ele permite ler a biblioteca requirements.txt, criar uma lista e instalar todos.
 
 ----
-## Instalar as libs
-> pip install -e.  
+## Instalar as libs  
+``` pip install -e. ```
+
 Ira instalar localmente nesse primeiro momento, e o projeto pamps.
 >> R: Running setup.py develop for pamps  
 OK!
 
-Mostra os detalhes do projeto:
-> pip show pamps  
+Mostra os detalhes do projeto:  
+``` pip show pamps  ```
 
 ----
 # Containers
@@ -138,19 +139,19 @@ Nas arquiteturas de *TI tradicionais* (monolíticas e legadas), todos os element
 Na nossa aplicação, vamos definir no **Dockerfile.dev** é uma camada sendo definido no conteiner.
 Utilizaremos um script padrão.
 
-### CRIAR A IMAGEM
-> no terminal rodar:
->> docker build -f Dockerfile.dev -t pamps:latest .  
+### CRIAR A IMAGEM (é necessario rodar somente a primeira vez)
+> no terminal rodar:  
+``` docker build -f Dockerfile.dev -t pamps:latest .  ```
 
 -f file  
 -t tag(nome para esse arquivo, ou pode usar 0.1.0)  
 . IMPORTANTE utilizar o *ponto* pois quero criar a imagem no local que eu estou.  
->>Successfully built 56f8527587dd  
->>Successfully tagged pamps:latest
+> Successfully built 56f8527587dd  
+> Successfully tagged pamps:latest
 
 A imagem fica guardada para sempre, o Container sera criado apartir dessa imagem.  
-Containers são efemeros, por isso devemos utilizar --rm
->docker run --rm -it -v $(pwd):/home/app/api -p 8000:8000 pamps  
+Containers são efemeros, por isso devemos utilizar --rm  
+```docker run --rm -it -v $(pwd):/home/app/api -p 8000:8000 pamps  ```  
 --rm remove  
 -it iterative  
 -v volume + local e imagem (pamps)
@@ -167,12 +168,37 @@ async def index():
     return {"hello": "world"}
 ```
 ## POSTGRESQL  
+
+![alt text](modelagem_postgrees_API.png)
+
+
 É um sistema gerenciador de banco de dados Open Source. Para isso vamos utilizar o PostgreSQL dentro de um container.
+
+**Pamps > Models** - Sera a nossa Modelagem do DB.
+
+Vamos modelar o banco de dados definido acima usando o SQLModel, que é uma biblioteca que integra o SQLAlchemy e o Pydantic e funciona muito bem com o FastAPI.  
+O SQLModel e FASTApi são baseados em tipagem.
 
 Colar o codigo dentro de postgres > create-databases.sh. sh é linguagem bash.
 Com isso conseguimos automatizar um codigo para criar o DB.
 
-Utilizaremos o **docker_compose.yaml** para subir ao mesmo tempo o DB e a API.
+---
+Utilizaremos o **docker_compose.yaml** para subir ao mesmo tempo o DB e a API.  
+**Docker_Compose** - é uma ferramenta usada para definir e executar aplicativos de vários contêineres do Docker.  
+**YAML** - define todos os serviços a serem implantados. Serializador, tipo json.
+
+Dentro do arquivo temos :  
+> PAMPS_DB__uri: "postgresql://postgres:postgres@db:5432/${PAMPS_DB:-pamps}"   
+nome de usuario: senha : porta : nome do banco.
+
+Edite o arquivo docker-compose.yaml
+
+- Definimos 2 serviços api e db  
+- Informamos os parametros de build com os dockerfiles
+- Na api abrimos a porta 8000
+- Na api passamos 2 variáveis de ambiente PAMPS_DB__uri e PAMPS_DB_connect_args para usarmos na conexão com o DB
+- Marcamos que a api depende do db para iniciar.
+- No db informamos o setup básico do postgres e pedimos para criar 2 bancos de dados, um para a app e um para testes.
 
 ### Docker compose
 Agora para iniciar a nossa API + o Banco de dados vamos precisar de um orquestrador de containers, em produção isso será feito com Kubernetes mas no ambiente de desenvolvimento podemos usar o docker-compose.
@@ -187,17 +213,18 @@ Edite o arquivo docker-compose.yaml
 - Marcamos que a api depende do db para iniciar.  
 - No db informamos o setup básico do postgres e pedimos para criar 2 bancos de dados, um para a app e um para testes.
 
->docker-compose build
+Executar a linha abaixo para rodar os dois containers:  
+``` docker-compose up ```
 
 ---
 ### MODELAGEM
 
-#### Definindo os models com Pydantic
+### Definindo os models com Pydantic
 
 Vamos modelar o banco de dados definido acima usando o SQLModel, que é uma biblioteca que integra o SQLAlchemy e o Pydantic e funciona muito bem com o FastAPI.  
 
 
-#### Settings
+### Settings
 Agora que temos pelo menos uma tabela mapeada para uma classe precisamos estabelecer conexão com o banco de dados e para isso precisamos carregar configurações
 
 Edite o arquivo pamps/default.toml
@@ -206,6 +233,22 @@ Vamos agora inicializar a biblioteca de configurações:
 
 Edite pamps/config.py
 
-#### Conexão com o banco de dados
+### Conexão com o banco de dados
 db.py - Sera o engine do banco de dados
 Utiliza o boiler plate (template), e ajustar conforme necessario.
+
+### DATABASE MIGRATIONS  
+Ferramenta que ira gerar um SQL baseado no script python, para gerar um banco de dados.
+
+``` alembic init migrations
+```
+Ira criar a pasta migrations. Alembic é a ferramenta de Database migrations.
+
+Agora vamos rodar os comando dentro do container.
+Antes era executado dentro da minha maquina.
+``` docker-compose exec api /bin/bash    
+```
+
+Agora este é o shell dentro do container.  
+>app@902b4a5e743a:~/api$
+

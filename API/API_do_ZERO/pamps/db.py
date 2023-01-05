@@ -1,3 +1,6 @@
+# Responsavel por fornecer um engine.
+# Conexão com o banco.
+
 """Database connection"""
 from sqlmodel import create_engine
 from .config import settings

@@ -1,0 +1,3 @@
+#pasta para arquivos que nunca serão commitados
+# * considera todos os arquivos. ! é para exceção.
+.secrets.toml

@@ -11,3 +11,6 @@ app = FastAPI(
 async def index():
     return {"first":"API"}
 
+@app.get('/home')
+async def index():
+    return {"Home":"Construindo uma API do ZERO"}
