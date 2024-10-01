@@ -40,3 +40,36 @@ def parabens():
 # Essa parte logica é possivel substituir por @meu_decorator, acima de parabens
 resultado = meu_decorator(parabens) #*@meu_decorator
 resultado()
+
+######## ----------- Parte 3 DECORATOR
+
+#! sem utilizar decorator
+#decorador é uma forma de mudar o output de uma funçao
+#assim que funciona o decorador no backend
+'''def soma(x,y):
+    return x+y
+
+def validar(f,x,y):
+    def valida():
+        if x < 0 or y < 0:
+            raise ValueError('X e Y precisam ser positivos\n')
+        return f(x,y)
+    return valida
+
+# x = validar(soma, 10,-5)()
+'''
+#! Utilizando decorator
+
+def validar2(f):                        #validar2 recebe a f = soma2
+    def valida2(x,y):                   #
+        if x < 0 or y < 0:
+            raise ValueError('X e Y precisam ser positivos\n')
+        return f(x,y)                   #retorna f >> soma \ x e y como variaveis
+    return valida2
+
+@validar2
+def soma2(x,y):                         #soma 2 será uma funcao dentro de validar2
+    return x + y
+
+a = soma2(10,12)
+print(a)
